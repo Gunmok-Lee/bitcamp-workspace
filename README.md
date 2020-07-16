@@ -32,5 +32,16 @@
     - > gradle init 실행하여 플젝트 폴더를 초기화시킨다.
 - 실습
     - src/main/java/Hello2.java
-    - src.main/java/com/eomcs/basic 폴더 생성
+    - src.main/java/com/eomcs/Hello2 생성
     - src.main/java/com/eomcs/basic/Hello2.java 생성
+- 패키지 소속 클래스 실행하기
+    -> java - classpath [클래스파일있는폴더] [패키지명포함 클래스 이름]
+
+### 4일차
+
+- 소스 파일과 클래스 블록, 클래스 파일의 관계
+    - com.eomcs.basic.ex01 패키지의 예제
+- 주석 종류와 사용법
+    - com.eomcs.basic.ex02 패키지 예제
+- 자바 언어로 값을 표현하는 문법(Literal)
+- com.eomcs.baisc.ex03 패키지 예제
