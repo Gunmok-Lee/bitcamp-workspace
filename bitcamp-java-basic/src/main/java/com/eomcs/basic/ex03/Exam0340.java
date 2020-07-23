@@ -16,8 +16,9 @@ class Exam0340 {
         // 초과하면 반올림 처리되거나 잘린다.
         System.out.println("2-----------------");
         System.out.println(999.99994f);
-        System.out.println(99999994.f);
+        System.out.println(9999999.4f);
         System.out.println(9.9999994f);
+        System.out.println(123456789.123456789f);
 
         // 메모리 크기를 넘는 값은 반올림 처리되어 저장된다.
         System.out.println("3-----------------");
