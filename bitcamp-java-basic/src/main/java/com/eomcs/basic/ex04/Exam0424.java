@@ -6,7 +6,7 @@ public class Exam0424 {
     float f;
     double d;
     
-    f = 99999.8888877777f;
+    f = 99999.888887777f;
     System.out.println(f);
     
     d = 99999.8888877777f;
