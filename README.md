@@ -186,10 +186,34 @@ macOS 개발 환경 구축하기
   
 ### 8일차(2020-07-22,수)
 
-- Gradle로 자바 프로젝트를 eclipse 프로젝트로 설정
- - 'build.gradle' 빌드 스크립트 파일에 'eclipse' 플러그인 추가
- - 이클립스 설정 파일 생성
-  - > gradle eclipse
+- Gradle로 자바 프로젝트를 eclipse 프로젝트로 설정하기
+  - 'build.gradle' 빌드 스크립트 파일에 'eclipse' 플러그인 추가
+  - 이클립스 설정 파일 생성
+    - > gradle eclipse 
 - Eclipse IDE로 프로젝트 가져오기
- - bitcamp-java-project 임포트
- - bitcamp-java-basic 임포트
+  - bitcamp-java-project 임포트 
+  - bitcamp-java-basic 임포트
+- 값을 메모리에 저장하는 방식
+  - com.eomcs.basic.ex03 패키지 예제
+  - 부동소수점을 저장하는 방법
+  - 문자를 저장하는 방법
+  - 논리 값을 저장하는 방법
+
+### 9일차(2020-07-23,목)
+
+- 변수를 다루는 방법
+  - com.eomcs.basic.ex04 패키지 예제
+  - Exam0110 ~ Exam0441 클래스
+  - 정수, 부동소수점, 문자, 논리 변수 정의 및 사용법
+
+### 10일차(2020-07-24,금)
+
+- 예제 프로젝트 수행(bitcamp-java-project)
+  - 02 버전 수행: 리터럴과 콘솔 출력 다루기
+  - 03 버전 수행: 변수와 키보드 입력 다루기
+- 변수를 다루는 방법 II
+  - com.eomcs.basic.ex04 패키지 예제
+  - Exam0510 ~ Exam0950 클래스
+  - 포인터의 개념(hello.c), 배열과 레퍼런스, 상수, 
+  - 클래스 변수와 인스턴스 변수, 로컬 변수
+  - 변수와 블록, 형변환
