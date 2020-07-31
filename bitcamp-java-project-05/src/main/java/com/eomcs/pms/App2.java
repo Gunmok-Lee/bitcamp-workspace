@@ -1,7 +1,6 @@
 package com.eomcs.pms;
 
 import java.sql.Date;
-import java.util.Scanner;
 
 public class App2 {
 
@@ -16,11 +15,11 @@ public class App2 {
       String members;
     }
 
+    java.util.Scanner keyInput = new java.util.Scanner(System.in);
+
+    // 여러 개의 프로젝트 정보를 입력 받기 위해 변수 준비
     final int LENGTH = 100;
     Project[] projects = new Project[LENGTH];
-
-
-    Scanner keyInput = new Scanner(System.in);
 
     int count = 0;
 
@@ -42,10 +41,10 @@ public class App2 {
       p.content = keyInput.nextLine();
 
       System.out.print("시작일? ");
-      p.startDate = java.sql.Date.valueOf(keyInput.nextLine());
+      p.startDate = Date.valueOf(keyInput.nextLine());
 
       System.out.print("종료일? ");
-      p.endDate = java.sql.Date.valueOf(keyInput.nextLine());
+      p.endDate = Date.valueOf(keyInput.nextLine());
 
       System.out.print("만든이? ");
       p.owner = keyInput.nextLine();

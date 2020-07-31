@@ -1,7 +1,6 @@
 package com.eomcs.pms;
 
 import java.sql.Date;
-import java.util.Scanner;
 
 public class App3 {
 
@@ -14,18 +13,17 @@ public class App3 {
       String worker;
     }
 
+    java.util.Scanner keyInput = new java.util.Scanner(System.in);
+
     final int LENGTH = 100;
 
-    Scanner keyInput = new Scanner(System.in);
-
     String project;
+
+    Task[] tasks = new Task[LENGTH];
 
     int count = 0;
 
     System.out.println("[작업]");
-
-    Task[] tasks = new Task[LENGTH];
-
 
     System.out.print("프로젝트? ");
     project = keyInput.nextLine();
@@ -55,15 +53,14 @@ public class App3 {
       System.out.print("담당자? ");
       t.worker = keyInput.nextLine();
 
-      System.out.println();
+      tasks[i] = t;
 
+      System.out.println();
 
       System.out.print("계속 입력하시겠습니까?(y/N) ");
       String response = keyInput.nextLine();
       if (!response.equalsIgnoreCase("y"))
         break;
-
-      tasks[i] = t;
 
       System.out.println();
     }
