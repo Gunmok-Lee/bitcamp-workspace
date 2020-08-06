@@ -32,6 +32,7 @@ public class Exam0220a {
       result = Calculator.multiple(result, 7);
       result = Calculator.divide(result, 3);
 
+
       System.out.printf("result = %d\n", result);
     }
   }
