@@ -7,5 +7,9 @@ public class Exam0110 {
     obj1.name = "홍길동";
 
     obj1.print();
+System.out.println("--------------------");
+    A3 a3 = new A3();
+    a3.print();
+    System.out.println(a3.tel);
   }
 }
