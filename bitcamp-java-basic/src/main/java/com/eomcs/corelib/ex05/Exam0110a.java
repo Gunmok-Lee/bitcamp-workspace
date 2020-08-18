@@ -1,9 +1,8 @@
-// java.util.Stack 사용
 package com.eomcs.corelib.ex05;
 
 import java.util.Stack;
 
-public class Exam0120 {
+public class Exam0110a {
 
   public static void main(String[] args) {
     String s1 = new String("aaa");
@@ -14,53 +13,34 @@ public class Exam0120 {
 
     Stack stack = new Stack();
     stack.push(s1);
-    print(stack);
     stack.push(s2);
-    print(stack);
     stack.push(s3);
     print(stack);
 
-    System.out.println("==>" + stack.pop()); // ccc
-    print(stack);
-    System.out.println("==>" + stack.pop()); // bbb
+    System.out.println("==> " + stack.pop());
+    System.out.println("==> " + stack.pop());
     print(stack);
 
     stack.push(s4);
-    print(stack);
     stack.push(s5);
     print(stack);
 
+    System.out.println("-----------------");
+
     String value;
-    while (stack.size() > 0) {
-      System.out.println(stack.pop());
+    try {
+      while (true) {
+        System.out.println(stack.pop());
+      }
+    } catch (Exception e) {
+      System.out.println("스택에서 더이상 꺼낼 데이터가 없습니다.");
     }
   }
 
   static void print(Stack list) {
     for (int i = 0; i < list.size(); i++) {
-      System.out.print(list.get(i) + ", ");
+      System.out.println(list.get(i) + ",");
     }
     System.out.println();
-  }    
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

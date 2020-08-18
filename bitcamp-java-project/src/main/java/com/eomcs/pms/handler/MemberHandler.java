@@ -4,6 +4,7 @@ import java.sql.Date;
 import com.eomcs.util.Prompt;
 
 public class MemberHandler {
+
   static class Member {
     // 회원 데이터
     int no;
@@ -44,4 +45,13 @@ public class MemberHandler {
     }
   }
 
+  public static Member findByName(String name) {
+    for (int i = 0; i < size; i++) {
+      Member member = list[i];
+      if (member.name.equals(name)) {
+        return member;
+      }
+    }
+    return null;
+  }
 }
