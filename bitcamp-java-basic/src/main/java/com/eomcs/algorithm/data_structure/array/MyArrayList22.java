@@ -34,18 +34,17 @@ import java.util.Arrays;
 //20) ArrayList에 보관되어 있는 인스턴스 목록을 배열로 리턴하는 toArray() 메서드를 추가한다.
 //21) toArray()에서 배열을 복사할 때 Arrays.copyOf() 메서드를 활용해보자.
 //22) 제네릭 적용
-//23) 파라미터로 받은 배열에 값을 채워주는 toArray(E[]) 메서드를 추가한다.
-public class MyArrayList<E> {
+public class MyArrayList22<E> {
 
   private static final int DEFAULT_CAPACITY = 5;
   private Object[] elementData;
   private int size;
 
-  public MyArrayList() {
+  public MyArrayList22() {
     elementData = new Object[DEFAULT_CAPACITY];
   }
 
-  public MyArrayList(int initialCapacity) {
+  public MyArrayList22(int initialCapacity) {
     if (initialCapacity < DEFAULT_CAPACITY) {
       elementData = new Object[DEFAULT_CAPACITY];
     } else {
@@ -147,14 +146,6 @@ public class MyArrayList<E> {
     }
     return arr;
      */
-  }
-
-  @SuppressWarnings("unchecked")
-  public E[] toArray(E[] arr) {
-    for ( int i = 0; i < this.size; i++) {
-      arr[i] = (E) this.elementData[i];
-    }
-    return arr;
   }
 }
 
