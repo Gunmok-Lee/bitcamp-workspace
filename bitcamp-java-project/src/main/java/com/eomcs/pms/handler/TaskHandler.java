@@ -2,16 +2,18 @@ package com.eomcs.pms.handler;
 
 import java.sql.Date;
 import com.eomcs.pms.domain.Task;
-import com.eomcs.util.ArrayList;
+import com.eomcs.util.AbstractList;
 import com.eomcs.util.Prompt;
 
 public class TaskHandler {
 
-  //Task 객체 목록을 저장할 ArrayList 객체를 준비한다.
-  // 제네릭 문법으로 항목의 타입을 지정한다.
-  ArrayList<Task> taskList = new ArrayList<>();
+  AbstractList<Task> taskList ;
   MemberHandler memberHandler;
 
+  public TaskHandler(AbstractList<Task> list, MemberHandler memberHandler) {
+    this.taskList = list;
+    this.memberHandler = memberHandler;
+  }
   public TaskHandler(MemberHandler memberHandler) {
     this.memberHandler = memberHandler;
   }

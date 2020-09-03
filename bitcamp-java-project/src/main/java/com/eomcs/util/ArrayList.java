@@ -1,41 +1,50 @@
 package com.eomcs.util;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
-// ArrayList 가 다룰 객체의 타입을 파라미터로 받을 수 있도록 '타입 파라미터'를 선언한다.
-public class ArrayList<E> {
+public class ArrayList<E> extends AbstractList<E> {
 
-  static final int DEFAULT_CAPACITY = 3;
-  Object[] elementData;
-  int size = 0;
+  private static final int DEFAULT_CAPACITY = 5;
+  private Object[] elementData;
+
 
   public ArrayList() {
-    // 배열을 만들 때는 타입 파라미터를 사용할 수 없다.
-    //list = new E[DEFAULT_CAPACITY]; // 컴파일 오류!
     elementData = new Object[DEFAULT_CAPACITY];
   }
 
   public ArrayList(int initialCapacity) {
-    if (initialCapacity <= DEFAULT_CAPACITY) {
+    if (initialCapacity < DEFAULT_CAPACITY) {
       elementData = new Object[DEFAULT_CAPACITY];
     } else {
       elementData = new Object[initialCapacity];
     }
   }
 
-  // 메서드의 파라미터를 선언할 때 클래스 선언부에 지정한 타입 파라미터의 이름을 사용한다.
-  public void add(E obj) {
+  @Override
+  public boolean add(E e) {
     if (size == elementData.length) {
       grow();
     }
-    elementData[size++] = obj;
+    elementData[size++] = e;
+    return true;
   }
 
   private void grow() {
+    //System.out.println("오호라! 배열을 늘리자.");
     int newCapacity = elementData.length + (elementData.length >> 1);
     elementData = Arrays.copyOf(elementData, newCapacity);
+    /*
+    Object[] newArray = new Object[elementData.length + (elementData.length >> 1)];
+    for (int i = 0; i < elementData.length; i++) {
+      newArray[i] = elementData[i];
+    }
+    elementData = newArray;
+     */
   }
 
+
+  @Override
   public void add(int index, E element) {
     if (size == elementData.length) {
       grow();
@@ -43,13 +52,14 @@ public class ArrayList<E> {
     if (index < 0 || index > size) {
       throw new ArrayIndexOutOfBoundsException("인덱스가 유효하지 않습니다.");
     }
-    for (int i = size; i > index; i--) {
+    for (int i = size; i > index ; i--) {
       elementData[i] = elementData[i - 1];
     }
     elementData[index] = element;
     size++;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public E get(int index) {
     if (index < 0 || index >= size) {
@@ -58,6 +68,7 @@ public class ArrayList<E> {
     return (E) elementData[index];
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public E set(int index, E element) {
     if (index < 0 || index >= size) {
@@ -68,6 +79,7 @@ public class ArrayList<E> {
     return (E) old;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public E remove(int index) {
     Object old = elementData[index];
@@ -79,32 +91,52 @@ public class ArrayList<E> {
         index, // 복사 목적지 인덱스
         this.size - (index + 1) // 복사할 항목의 개수
         );
+    /*
+    for (int i = index; i < size - 1; i++) {
+      elementData[i] = elementData[i + 1];
+    }
+     */
 
     size--;
     elementData[size] = null;
+    // 쓰지 않는 인스턴스의 주소를 제거하여
+    // 가비지 될 수 있게 한다.
+
     return (E) old;
   }
 
-  public int size() {
-    return this.size;
-  }
 
+
+  @Override
   public Object[] toArray() {
     Object[] arr = Arrays.copyOf(elementData, this.size);
+    //System.out.println(elementData == arr); //false
     return arr;
+    /*
+    Object[] arr = new Object[this.size];
+    for (int i = 0; i < arr.length; i++) {
+      arr[i] = elementData[i];
+    }
+    return arr;
+     */
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public E[] toArray(E[] arr) {
-    if (arr.length < this.size) {
-      // 파라미터로 받은 배열이 작을 때는 새 배열을 만들어 리턴.
-      return (E[]) Arrays.copyOf(this.elementData, this.size, arr.getClass());
+    if (arr.length < size) {
+      arr = (E[]) Array.newInstance(arr.getClass().getComponentType(), this.size);
+      //return (E[]) Arrays.copyOf(this.elementData, this.size, arr.getClass());
     }
-    System.arraycopy(this.elementData, 0, arr, 0, this.size);
-    return arr; // 넉넉할 때는 파라미터로 받은 배열을 그대로 리턴.
+    System.arraycopy(
+        this.elementData,
+        0,
+        arr,
+        0,
+        this.size);
+    return arr;
   }
 }
-
 
 
 

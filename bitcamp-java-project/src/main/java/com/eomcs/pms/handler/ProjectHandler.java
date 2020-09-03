@@ -2,15 +2,18 @@ package com.eomcs.pms.handler;
 
 import java.sql.Date;
 import com.eomcs.pms.domain.Project;
-import com.eomcs.util.ArrayList;
+import com.eomcs.util.AbstractList;
 import com.eomcs.util.Prompt;
 
 public class ProjectHandler {
 
-  //Project 객체 목록을 저장할 ArrayList 객체를 준비한다.
-  // 제네릭 문법으로 항목의 타입을 지정한다.
-  ArrayList<Project> projectList = new ArrayList<>();
+  AbstractList<Project> projectList ;
   MemberHandler memberHandler;
+
+  public ProjectHandler(AbstractList<Project> list, MemberHandler memberHandler) {
+    this.projectList = list;
+    this.memberHandler = memberHandler;
+  }
 
   public ProjectHandler(MemberHandler memberHandler) {
     this.memberHandler = memberHandler;
