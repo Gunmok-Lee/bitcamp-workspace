@@ -1,110 +1,124 @@
 package com.eomcs.pms;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 import com.eomcs.pms.domain.Task;
-import com.eomcs.pms.handler.BoardHandler;
-import com.eomcs.pms.handler.MemberHandler;
-import com.eomcs.pms.handler.ProjectHandler;
-import com.eomcs.pms.handler.TaskHandler;
-import com.eomcs.util.ArrayList;
-import com.eomcs.util.LinkedList;
-import com.eomcs.util.AbstractList;
+import com.eomcs.pms.handler.BoardAddCommand;
+import com.eomcs.pms.handler.BoardDeleteCommand;
+import com.eomcs.pms.handler.BoardDetailCommand;
+import com.eomcs.pms.handler.BoardListCommand;
+import com.eomcs.pms.handler.BoardUpdateCommand;
+import com.eomcs.pms.handler.Command;
+import com.eomcs.pms.handler.HelloCommand;
+import com.eomcs.pms.handler.MemberAddCommand;
+import com.eomcs.pms.handler.MemberDeleteCommand;
+import com.eomcs.pms.handler.MemberDetailCommand;
+import com.eomcs.pms.handler.MemberListCommand;
+import com.eomcs.pms.handler.MemberUpdateCommand;
+import com.eomcs.pms.handler.ProjectAddCommand;
+import com.eomcs.pms.handler.ProjectDeleteCommand;
+import com.eomcs.pms.handler.ProjectDetailCommand;
+import com.eomcs.pms.handler.ProjectListCommand;
+import com.eomcs.pms.handler.ProjectUpdateCommand;
+import com.eomcs.pms.handler.TaskAddCommand;
+import com.eomcs.pms.handler.TaskDeleteCommand;
+import com.eomcs.pms.handler.TaskDetailCommand;
+import com.eomcs.pms.handler.TaskListCommand;
+import com.eomcs.pms.handler.TaskUpdateCommand;
 import com.eomcs.util.Prompt;
-import com.eomcs.util.Queue;
-import com.eomcs.util.Stack;
 
 public class App {
 
   public static void main(String[] args) {
 
-    AbstractList<Board> boardList = new LinkedList<>();
-    BoardHandler boardHandler = new BoardHandler(boardList);
+    Map<String,Command> commandMap = new HashMap<>();
 
-    AbstractList<Member> memberList = new ArrayList<>();
-    MemberHandler memberHandler = new MemberHandler(memberList);
+    List<Board> boardList = new ArrayList<>();
+    commandMap.put("/board/add", new BoardAddCommand(boardList));
+    commandMap.put("/board/list", new BoardListCommand(boardList));
+    commandMap.put("/board/detail", new BoardDetailCommand(boardList));
+    commandMap.put("/board/update", new BoardUpdateCommand(boardList));
+    commandMap.put("/board/delete", new BoardDeleteCommand(boardList));
 
-    AbstractList<Project> projectList = new LinkedList<>();
-    ProjectHandler projectHandler = new ProjectHandler(projectList, memberHandler);
+    List<Member> memberList = new LinkedList<>();
+    MemberListCommand memberListCommand = new MemberListCommand(memberList);
+    commandMap.put("/member/add", new MemberAddCommand(memberList));
+    commandMap.put("/member/list", new MemberListCommand(memberList));
+    commandMap.put("/member/delete", new MemberDeleteCommand(memberList));
+    commandMap.put("/member/detail", new MemberDetailCommand(memberList));
+    commandMap.put("/member/update", new MemberUpdateCommand(memberList));
 
-    AbstractList<Task> taskList = new ArrayList<>();
-    TaskHandler taskHandler = new TaskHandler(taskList, memberHandler);
+    List<Project> projectList = new LinkedList<>();
+    commandMap.put("/project/add", new ProjectAddCommand(projectList, memberListCommand));
+    commandMap.put("/project/list", new ProjectListCommand(projectList));
+    commandMap.put("/project/detail", new ProjectDetailCommand(projectList));
+    commandMap.put("/project/update", new ProjectUpdateCommand(projectList, memberListCommand));
+    commandMap.put("/project/delete", new ProjectDeleteCommand(projectList));
 
-    Stack<String> commandList = new Stack<>();
-    Queue<String> commandList2 = new Queue<>();
+    List<Task> taskList = new ArrayList<>();
+    commandMap.put("/task/add", new TaskAddCommand(taskList, memberListCommand));
+    commandMap.put("/task/list", new TaskListCommand(taskList));
+    commandMap.put("/task/delete", new TaskDeleteCommand(taskList));
+    commandMap.put("/task/detail", new TaskDetailCommand(taskList));
+    commandMap.put("/task/update", new TaskUpdateCommand(taskList,memberListCommand));
+
+    commandMap.put("/hello", new HelloCommand());
+
+    Deque<String> commandStack = new ArrayDeque<>();
+    Queue<String> commandQueue = new LinkedList<>();
 
     loop:
       while (true) {
-        String command = Prompt.inputString("명령> ");
+        String inputStr = Prompt.inputString("명령> ");
 
-        // 명령어를 보관한다.
-        commandList.push(command);
-        commandList2.offer(command);
+        if (inputStr.length() == 0) {
+          continue;
+        }
+        // 사용자가 입력한 명령을 보관한다.
+        commandStack.push(inputStr);
+        commandQueue.offer(inputStr);
 
-        switch (command) {
-          case "/member/add": memberHandler.add(); break;
-          case "/member/list": memberHandler.list(); break;
-          case "/member/detail": memberHandler.detail(); break;
-          case "/member/update": memberHandler.update(); break;
-          case "/project/add": projectHandler.add(); break;
-          case "/project/list": projectHandler.list(); break;
-          case "/project/detail": projectHandler.detail(); break;
-          case "/project/update": projectHandler.update(); break;
-          case "/project/delete": projectHandler.delete(); break;
-          case "/task/add": taskHandler.add(); break;
-          case "/task/list": taskHandler.list(); break;
-          case "/task/detail": taskHandler.detail(); break;
-          case "/task/update": taskHandler.update(); break;
-          case "/task/delete": taskHandler.delete(); break;
-          case "/board/add": boardHandler.add(); break;
-          case "/board/list": boardHandler.list(); break;
-          case "/board/detail": boardHandler.detail(); break;
-          case "/board/update": boardHandler.update(); break;
-          case "/board/delete": boardHandler.delete(); break;
-          case "history": printCommandHistory(commandList); break;
-          case "history2": printCommandHistory2(commandList2); break;
+        switch (inputStr) {
+          case "history": printCommandHistory(commandStack.iterator()); break;
+          case "history2": printCommandHistory(commandQueue.iterator()); break;
           case "quit":
           case "exit":
             System.out.println("안녕!");
             break loop;
           default:
-            System.out.println("실행할 수 없는 명령입니다.");
+            Command command = commandMap.get(inputStr);
+            if (command != null) {
+              command.execute();
+            } else {
+              System.out.println("실행할 수 없는 명령입니다.");
+            }
         }
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
       }
 
     Prompt.close();
   }
-  private static void printCommandHistory2(Queue<String> commandList2) {
+
+  static void printCommandHistory(Iterator<String> iterator) {
     try {
-      Queue<String> commandQueue = commandList2.clone();
-      for (int count = 1; commandQueue.size() > 0; count++) {
-        System.out.println(commandQueue.poll());
+      int count = 0;
+      while (iterator.hasNext()) {
+        System.out.println(iterator.next());
+        count++;
 
-        if ((count % 5) == 0) {
-          String response = Prompt.inputString(":");
-          if (response.equalsIgnoreCase("q")) {
-            break;
-          }
-        }
-      }
-    } catch (Exception e) {
-      System.out.println("history2 명령 처리 중 오류 발생!");
-    }
-  }
-
-  private static void printCommandHistory(Stack<String> commandList) {
-    try {
-      Stack<String> commandStack = commandList.clone();
-      for (int count = 1; !commandStack.empty(); count++) {
-        System.out.println(commandStack.pop());
-
-        if ((count % 5) == 0) {
-          String response = Prompt.inputString(":");
-          if (response.equalsIgnoreCase("q")) {
-            break;
-          }
+        // 5개 출력할 때 마다 계속 출력할지 묻는다.
+        if ((count % 5) == 0 && Prompt.inputString(":").equalsIgnoreCase("q")) {
+          break;
         }
       }
     } catch (Exception e) {
@@ -112,4 +126,3 @@ public class App {
     }
   }
 }
-
