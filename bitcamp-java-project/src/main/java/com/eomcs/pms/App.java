@@ -1,5 +1,8 @@
 package com.eomcs.pms;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -39,11 +42,12 @@ import com.eomcs.util.Prompt;
 
 public class App {
 
+  static List<Board> boardList = new ArrayList<>();
+
   public static void main(String[] args) {
 
     Map<String,Command> commandMap = new HashMap<>();
 
-    List<Board> boardList = new ArrayList<>();
     commandMap.put("/board/add", new BoardAddCommand(boardList));
     commandMap.put("/board/list", new BoardListCommand(boardList));
     commandMap.put("/board/detail", new BoardDetailCommand(boardList));
@@ -98,7 +102,15 @@ public class App {
           default:
             Command command = commandMap.get(inputStr);
             if (command != null) {
-              command.execute();
+              try {
+                command.execute();
+              } catch (Exception e) {
+                System.out.println("------------------------------");
+                System.out.printf("명령어 실행 오류 발생: %s\n%s\n",
+                    e.getClass().getName(),
+                    e.getMessage());
+                System.out.println("------------------------------");
+              }
             } else {
               System.out.println("실행할 수 없는 명령입니다.");
             }
@@ -107,6 +119,8 @@ public class App {
       }
 
     Prompt.close();
+
+    saveBoards();
   }
 
   static void printCommandHistory(Iterator<String> iterator) {
@@ -123,6 +137,38 @@ public class App {
       }
     } catch (Exception e) {
       System.out.println("history 명령 처리 중 오류 발생!");
+    }
+  }
+
+  public static void saveBoards() {
+    System.out.println("[게시글 저장]");
+
+    File file = new File("./board.csv");
+    FileWriter out = null;
+
+    try {
+      out = new FileWriter(file);
+      for (Board board : boardList) {
+        String record = String.format("%d, %s, %s, %s, %s, %d\n",
+            board.getNo(),
+            board.getTitle(),
+            board.getContent(),
+            board.getWriter(),
+            board.getRegisteredDate().toString(),
+            board.getViewCount());
+        out.write(record);
+      }
+
+    } catch (IOException e) {
+      System.out.println("파일 출력 작업 중에 오류 발생!");
+
+    }finally {
+      try {
+
+        out.close();
+      } catch (Exception e) {
+
+      }
     }
   }
 }
