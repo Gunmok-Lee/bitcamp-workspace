@@ -4,13 +4,13 @@ import java.util.List;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.util.Prompt;
 
-public class TaskDeleteCommand implements Command{
-  private List<Task> taskList;
+public class TaskDeleteCommand implements Command {
+
+  List<Task> taskList;
 
   public TaskDeleteCommand(List<Task> list) {
     this.taskList = list;
   }
-
 
   @Override
   public void execute() {

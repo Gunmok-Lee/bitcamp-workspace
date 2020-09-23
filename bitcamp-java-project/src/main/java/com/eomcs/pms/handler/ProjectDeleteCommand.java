@@ -5,7 +5,8 @@ import com.eomcs.pms.domain.Project;
 import com.eomcs.util.Prompt;
 
 public class ProjectDeleteCommand implements Command {
-  private List<Project> projectList;
+
+  List<Project> projectList;
 
   public ProjectDeleteCommand(List<Project> list) {
     this.projectList = list;
@@ -13,7 +14,7 @@ public class ProjectDeleteCommand implements Command {
 
   @Override
   public void execute() {
-    System.out.println("[프로젝트 목록]");System.out.println("[프로젝트 삭제]");
+    System.out.println("[프로젝트 삭제]");
     int no = Prompt.inputInt("번호? ");
     int index = indexOf(no);
 

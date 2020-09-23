@@ -4,13 +4,13 @@ import java.util.List;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.util.Prompt;
 
-public class TaskDetailCommand implements Command{
-  private List<Task> taskList;
+public class TaskDetailCommand implements Command {
+
+  List<Task> taskList;
 
   public TaskDetailCommand(List<Task> list) {
     this.taskList = list;
   }
-
 
   @Override
   public void execute() {
@@ -39,6 +39,7 @@ public class TaskDetailCommand implements Command{
     System.out.printf("상태: %s\n", stateLabel);
     System.out.printf("담당자: %s\n", task.getOwner());
   }
+
   private Task findByNo(int no) {
     for (int i = 0; i < taskList.size(); i++) {
       Task task = taskList.get(i);

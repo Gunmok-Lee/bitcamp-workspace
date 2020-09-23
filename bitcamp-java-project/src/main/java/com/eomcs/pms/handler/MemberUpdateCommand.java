@@ -5,7 +5,8 @@ import com.eomcs.pms.domain.Member;
 import com.eomcs.util.Prompt;
 
 public class MemberUpdateCommand implements Command {
-  private List<Member> memberList;
+
+  List<Member> memberList;
 
   public MemberUpdateCommand(List<Member> list) {
     this.memberList = list;
@@ -46,6 +47,7 @@ public class MemberUpdateCommand implements Command {
 
     System.out.println("회원을 변경하였습니다.");
   }
+
   private Member findByNo(int no) {
     for (int i = 0; i < memberList.size(); i++) {
       Member member = memberList.get(i);

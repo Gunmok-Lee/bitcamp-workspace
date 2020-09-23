@@ -1,6 +1,6 @@
-// 메서드 레퍼런스 - 인스턴스 메서드 레퍼런스 구현 원리
 package com.eomcs.oop.ex12;
 
+import com.eomcs.oop.ex12.Exam0410.Interest;
 
 public class Exam0620 {
 
@@ -22,12 +22,11 @@ public class Exam0620 {
     public double day(int money) {
       return money * rate / 100 / 365;
     }
-  }
 
-  static interface Interest {
-    double compute(int money);
+    static interface Interest {
+      double compute(int money);
+    }
   }
-
   public static void main(String[] args) {
 
     Calculator 보통예금 = new Calculator(0.5);
@@ -50,5 +49,4 @@ public class Exam0620 {
     System.out.printf("년 이자: %.1f\n", i1.compute(10_0000_0000));
   }
 }
-
 

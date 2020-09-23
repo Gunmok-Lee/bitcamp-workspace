@@ -5,7 +5,8 @@ import com.eomcs.pms.domain.Member;
 import com.eomcs.util.Prompt;
 
 public class MemberDeleteCommand implements Command {
-  private List<Member> memberList;
+
+  List<Member> memberList;
 
   public MemberDeleteCommand(List<Member> list) {
     this.memberList = list;
@@ -31,6 +32,7 @@ public class MemberDeleteCommand implements Command {
     memberList.remove(index);
     System.out.println("회원을 삭제하였습니다.");
   }
+
   private int indexOf(int no) {
     for (int i = 0; i < memberList.size(); i++) {
       Member member = memberList.get(i);

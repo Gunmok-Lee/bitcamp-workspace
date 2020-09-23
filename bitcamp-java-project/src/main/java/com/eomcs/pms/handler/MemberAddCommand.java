@@ -5,7 +5,8 @@ import com.eomcs.pms.domain.Member;
 import com.eomcs.util.Prompt;
 
 public class MemberAddCommand implements Command {
-  private List<Member> memberList;
+
+  List<Member> memberList;
 
   public MemberAddCommand(List<Member> list) {
     this.memberList = list;
@@ -26,5 +27,4 @@ public class MemberAddCommand implements Command {
 
     memberList.add(member);
   }
-
 }

@@ -6,7 +6,7 @@ import com.eomcs.util.Prompt;
 
 public class BoardDeleteCommand implements Command {
 
-  private List<Board> boardList;
+  List<Board> boardList;
 
   public BoardDeleteCommand(List<Board> list) {
     this.boardList = list;
@@ -42,5 +42,4 @@ public class BoardDeleteCommand implements Command {
     }
     return -1;
   }
-
 }

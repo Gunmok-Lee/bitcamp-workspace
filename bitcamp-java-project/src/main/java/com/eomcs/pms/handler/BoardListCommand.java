@@ -6,11 +6,12 @@ import com.eomcs.pms.domain.Board;
 
 public class BoardListCommand implements Command {
 
-  private List<Board> boardList;
+  List<Board> boardList;
 
   public BoardListCommand(List<Board> list) {
     this.boardList = list;
   }
+
 
   @Override
   public void execute() {

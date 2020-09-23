@@ -6,7 +6,7 @@ import com.eomcs.util.Prompt;
 
 public class BoardUpdateCommand implements Command {
 
-  private List<Board> boardList;
+  List<Board> boardList;
 
   public BoardUpdateCommand(List<Board> list) {
     this.boardList = list;
@@ -40,8 +40,8 @@ public class BoardUpdateCommand implements Command {
     board.setContent(content);
     board.setWriter(writer);
     System.out.println("게시글을 변경하였습니다.");
-
   }
+
   private Board findByNo(int no) {
     for (int i = 0; i < boardList.size(); i++) {
       Board board = boardList.get(i);

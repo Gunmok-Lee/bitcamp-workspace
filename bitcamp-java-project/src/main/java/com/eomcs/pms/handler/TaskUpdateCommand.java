@@ -5,15 +5,15 @@ import java.util.List;
 import com.eomcs.pms.domain.Task;
 import com.eomcs.util.Prompt;
 
-public class TaskUpdateCommand implements Command{
-  private List<Task> taskList;
+public class TaskUpdateCommand implements Command {
+
+  List<Task> taskList;
   MemberListCommand memberListCommand;
 
   public TaskUpdateCommand(List<Task> list, MemberListCommand memberListCommand) {
     this.taskList = list;
     this.memberListCommand = memberListCommand;
   }
-
 
   @Override
   public void execute() {
@@ -72,6 +72,7 @@ public class TaskUpdateCommand implements Command{
 
     System.out.println("작업을 변경하였습니다.");
   }
+
   private Task findByNo(int no) {
     for (int i = 0; i < taskList.size(); i++) {
       Task task = taskList.get(i);
