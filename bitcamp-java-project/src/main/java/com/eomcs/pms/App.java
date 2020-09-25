@@ -1,16 +1,14 @@
 package com.eomcs.pms;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
@@ -45,34 +43,35 @@ import com.eomcs.pms.handler.TaskDeleteCommand;
 import com.eomcs.pms.handler.TaskDetailCommand;
 import com.eomcs.pms.handler.TaskListCommand;
 import com.eomcs.pms.handler.TaskUpdateCommand;
+import com.eomcs.util.CsvObject;
 import com.eomcs.util.Prompt;
+import com.google.gson.Gson;
 
 public class App {
 
-  // main(), saveBoards(), loadBoards() 가 공유하는 필드
-  static List<Board> boardList = new ArrayList<>();
-  static File boardFile = new File("./board.data"); // 게시글을 저장할 파일 정보
-
-  // main(), saveMembers(), loadMembers() 가 공유하는 필드
-  static List<Member> memberList = new LinkedList<>();
-  static File memberFile = new File("./member.data"); // 회원을 저장할 파일 정보
-
-  // main(), saveProjects(), loadProjects() 가 공유하는 필드
-  static List<Project> projectList = new LinkedList<>();
-  static File projectFile = new File("./project.data"); // 프로젝트를 저장할 파일 정보
-
-  // main(), saveTasks(), loadTasks() 가 공유하는 필드
-  static List<Task> taskList = new ArrayList<>();
-  static File taskFile = new File("./task.data"); // 작업을 저장할 파일 정보
-
-
   public static void main(String[] args) {
 
+    // main(), saveBoards(), loadBoards() 가 공유하는 필드
+    List<Board> boardList = new ArrayList<>();
+    File boardFile = new File("./board.json"); // 게시글을 저장할 파일 정보
+
+    // main(), saveMembers(), loadMembers() 가 공유하는 필드
+    List<Member> memberList = new LinkedList<>();
+    File memberFile = new File("./member.json"); // 회원을 저장할 파일 정보
+
+    // main(), saveProjects(), loadProjects() 가 공유하는 필드
+    List<Project> projectList = new LinkedList<>();
+    File projectFile = new File("./project.json"); // 프로젝트를 저장할 파일 정보
+
+    // main(), saveTasks(), loadTasks() 가 공유하는 필드
+    List<Task> taskList = new ArrayList<>();
+    File taskFile = new File("./task.json"); // 작업을 저장할 파일 정보
+
     // 파일에서 데이터 로딩
-    loadObjects(boardList, boardFile);
-    loadObjects(memberList, memberFile);
-    loadObjects(projectList, projectFile);
-    loadObjects(taskList, taskFile);
+    loadObjects(boardList, boardFile, Board[].class);
+    loadObjects(memberList, memberFile, Member[].class);
+    loadObjects(projectList, projectFile, Project[].class);
+    loadObjects(taskList, taskFile, Task[].class);
 
     Map<String,Command> commandMap = new HashMap<>();
 
@@ -168,23 +167,21 @@ public class App {
     }
   }
 
-  private static <E extends Serializable> void saveObjects(Collection<E> list, File file) {
-    ObjectOutputStream out = null;
+  private static <T extends CsvObject> void saveObjects(Collection<T> list, File file) {
+    BufferedWriter out = null;
 
     try {
-      // 파일로 데이터를 출력할 때 사용할 도구를 준비한다.
-      out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+      out = new BufferedWriter(new FileWriter(file));
 
-      // 데이터의 개수를 먼저 출력한다.(4바이트)
-      out.writeInt(list.size());
+      Gson gson = new Gson();
+      String jsonStr = gson.toJson(list);
+      out.write(jsonStr);
 
-      for (E obj : list) {
-        out.writeObject(obj);
-      }
+      out.flush();
       System.out.printf("총 %d 개의 객체를 '%s' 파일에 저장했습니다.\n", list.size(), file.getName());
 
     } catch (IOException e) {
-      System.out.printf("객체를 '%s' 파일에 쓰기 중 오류 발생! -  %s\n",file.getName(), e.getMessage());
+      System.out.printf("객체를 '%s' 파일에 쓰기 중 오류 발생! - %s\n", file.getName(), e.getMessage());
 
     } finally {
       try {
@@ -195,23 +192,47 @@ public class App {
     }
   }
 
-  @SuppressWarnings("unchecked")
-  private static <E extends Serializable> void loadObjects(Collection<E> list, File file) {
-    ObjectInputStream in = null;
+  private static <T> void loadObjects(Collection<T> list, File file,Class<T[]> clazz) {
+    BufferedReader in = null;
 
     try {
       // 파일을 읽을 때 사용할 도구를 준비한다.
-      in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+      in = new BufferedReader(new FileReader(file));
 
-      int size = in.readInt();
+      //    1.
 
-      for (int i = 0; i < size; i++) {
-        list.add((E)in.readObject());
-      }
+      //      StringBuilder strBuilder = new StringBuilder();
+      //      int b = 0;
+      //      while ((b = in.read()) != -1) {
+      //        strBuilder.append((char)b);
+      //      }
+      //      Gson gson = new Gson();
+      //      T[] arr = gson.fromJson(strBuilder.toString(), clazz);
+      //      for (T obj : arr) {
+      //        list.add(obj);
+      //      }
+      //    2.
+
+      //      Gson gson = new Gson();
+      //      T[] arr = gson.fromJson(in, clazz);
+      //      for (T obj : arr) {
+      //        list.add(obj);
+      //      }
+
+      //    3.
+
+      //      Gson gson = new Gson();
+      //           T[] arr = gson.fromJson(in, clazz);
+      //              list.addAll(Arrays.asList(arr));
+
+      //    4.
+
+      list.addAll(Arrays.asList(new Gson().fromJson(in, clazz)));
+
       System.out.printf("'%s' 파일에서 총 %d 개의 게시글 데이터를 로딩했습니다.\n",file.getName(), list.size());
 
     } catch (Exception e) {
-      System.out.printf("'%s' 파일 읽기 중 오류 발생! - '%s'\n",file.getName(), e.getMessage());
+      System.out.printf("'%s' 파일 읽기 중 오류 발생! - %s\n",file.getName(), e.getMessage());
       // 파일에서 데이터를 읽다가 오류가 발생하더라도
       // 시스템을 멈추지 않고 계속 실행하게 한다.
       // 이것이 예외처리를 하는 이유이다!!!
@@ -225,9 +246,3 @@ public class App {
     }
   }
 }
-
-
-
-
-
-

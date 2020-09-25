@@ -1,11 +1,9 @@
 package com.eomcs.pms.domain;
 
-import java.io.Serializable;
 import java.sql.Date;
+import com.eomcs.util.CsvObject;
 
-public class Project implements Serializable {
-  private static final long serialVersionUID = 1L;
-
+public class Project implements CsvObject {
   private int no;
   private String title;
   private String content;
@@ -57,5 +55,46 @@ public class Project implements Serializable {
     this.members = members;
   }
 
+  @Override
+  public String toCsvString() {
+    //프로젝트 목록에서 프로젝트 데이터를 꺼내 CSV 형식으로 출력한다.
+    return String.format("%d,%s,%s,%s,%s,%s,%s",
+        this.getNo(),
+        this.getTitle(),
+        this.getContent(),
+        this.getStartDate(),
+        this.getEndDate(),
+        this.getOwner(),
+        this.getMembers());
 
+  }
+
+  public static Project valueOfCsv(String csv) {
+    String[] fields = csv.split(",");
+
+    Project project = new Project();
+    project.setNo(Integer.parseInt(fields[0]));
+    project.setTitle(fields[1]);
+    project.setContent(fields[2]);
+    project.setStartDate(Date.valueOf(fields[3]));
+    project.setEndDate(Date.valueOf(fields[4]));
+    project.setOwner(fields[5]);
+    project.setMembers(fields[6]);
+
+    return project;
+  }
+
+  public Project() {}
+
+  public Project(String csv) {
+    String[] fields = csv.split(",");
+
+    this.setNo(Integer.parseInt(fields[0]));
+    this.setTitle(fields[1]);
+    this.setContent(fields[2]);
+    this.setStartDate(Date.valueOf(fields[3]));
+    this.setEndDate(Date.valueOf(fields[4]));
+    this.setOwner(fields[5]);
+    this.setMembers(fields[6]);
+  }
 }
