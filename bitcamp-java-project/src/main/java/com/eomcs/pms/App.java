@@ -1,22 +1,16 @@
 package com.eomcs.pms;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import com.eomcs.context.ApplicationContextListener;
 import com.eomcs.pms.domain.Board;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
@@ -43,35 +37,52 @@ import com.eomcs.pms.handler.TaskDeleteCommand;
 import com.eomcs.pms.handler.TaskDetailCommand;
 import com.eomcs.pms.handler.TaskListCommand;
 import com.eomcs.pms.handler.TaskUpdateCommand;
-import com.eomcs.util.CsvObject;
+import com.eomcs.pms.listener.AppInitListener;
+import com.eomcs.pms.listener.DataHandlerListener;
 import com.eomcs.util.Prompt;
-import com.google.gson.Gson;
 
 public class App {
 
-  public static void main(String[] args) {
+  Map<String,Object> context = new Hashtable<>();
 
-    // main(), saveBoards(), loadBoards() 가 공유하는 필드
-    List<Board> boardList = new ArrayList<>();
-    File boardFile = new File("./board.json"); // 게시글을 저장할 파일 정보
+  List<ApplicationContextListener> listeners = new ArrayList<>();
 
-    // main(), saveMembers(), loadMembers() 가 공유하는 필드
-    List<Member> memberList = new LinkedList<>();
-    File memberFile = new File("./member.json"); // 회원을 저장할 파일 정보
+  public void addApplicationContextListener(ApplicationContextListener listener) {
+    listeners.add(listener);
+  }
 
-    // main(), saveProjects(), loadProjects() 가 공유하는 필드
-    List<Project> projectList = new LinkedList<>();
-    File projectFile = new File("./project.json"); // 프로젝트를 저장할 파일 정보
+  public void removeApplicationContextListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
 
-    // main(), saveTasks(), loadTasks() 가 공유하는 필드
-    List<Task> taskList = new ArrayList<>();
-    File taskFile = new File("./task.json"); // 작업을 저장할 파일 정보
+  private void notifyApplicationContextListenerOnServiceStarted() {
+    for (ApplicationContextListener listener : listeners) {
+      listener.contextInitialized(context);
+    }
+  }
 
-    // 파일에서 데이터 로딩
-    loadObjects(boardList, boardFile, Board[].class);
-    loadObjects(memberList, memberFile, Member[].class);
-    loadObjects(projectList, projectFile, Project[].class);
-    loadObjects(taskList, taskFile, Task[].class);
+  private void notifyApplicationContextListeneronServiceStopped() {
+    for (ApplicationContextListener listener : listeners) {
+      listener.contextDestroyed(context);
+    }
+  }
+  public static void main(String[] args) throws Exception {
+    App app = new App();
+    app.addApplicationContextListener(new AppInitListener());
+    app.addApplicationContextListener(new DataHandlerListener());
+    app.service();
+  }
+
+  @SuppressWarnings("unchecked")
+  public void service() throws Exception {
+
+    notifyApplicationContextListenerOnServiceStarted();
+    // 스태틱 멤버들이 공유하는 변수가 아니라면 로컬 변수로 만들라.
+
+    List<Board> boardList = (List<Board>) context.get("boardList");
+    List<Member> memberList = (List<Member>) context.get("MemberList");
+    List<Project> projectList = (List<Project>) context.get("ProjectList");
+    List<Task> taskList = (List<Task>) context.get("TaskList");
 
     Map<String,Command> commandMap = new HashMap<>();
 
@@ -144,11 +155,7 @@ public class App {
 
     Prompt.close();
 
-    // 데이터를 파일에 저장
-    saveObjects(boardList, boardFile);
-    saveObjects(memberList, memberFile);
-    saveObjects(projectList, projectFile);
-    saveObjects(taskList, taskFile);
+    notifyApplicationContextListeneronServiceStopped();
   }
 
   static void printCommandHistory(Iterator<String> iterator) {
@@ -164,85 +171,6 @@ public class App {
       }
     } catch (Exception e) {
       System.out.println("history 명령 처리 중 오류 발생!");
-    }
-  }
-
-  private static <T extends CsvObject> void saveObjects(Collection<T> list, File file) {
-    BufferedWriter out = null;
-
-    try {
-      out = new BufferedWriter(new FileWriter(file));
-
-      Gson gson = new Gson();
-      String jsonStr = gson.toJson(list);
-      out.write(jsonStr);
-
-      out.flush();
-      System.out.printf("총 %d 개의 객체를 '%s' 파일에 저장했습니다.\n", list.size(), file.getName());
-
-    } catch (IOException e) {
-      System.out.printf("객체를 '%s' 파일에 쓰기 중 오류 발생! - %s\n", file.getName(), e.getMessage());
-
-    } finally {
-      try {
-        out.close();
-      } catch (IOException e) {
-        // FileWriter를 닫을 때 발생하는 예외는 무시한다.
-      }
-    }
-  }
-
-  private static <T> void loadObjects(Collection<T> list, File file,Class<T[]> clazz) {
-    BufferedReader in = null;
-
-    try {
-      // 파일을 읽을 때 사용할 도구를 준비한다.
-      in = new BufferedReader(new FileReader(file));
-
-      //    1.
-
-      //      StringBuilder strBuilder = new StringBuilder();
-      //      int b = 0;
-      //      while ((b = in.read()) != -1) {
-      //        strBuilder.append((char)b);
-      //      }
-      //      Gson gson = new Gson();
-      //      T[] arr = gson.fromJson(strBuilder.toString(), clazz);
-      //      for (T obj : arr) {
-      //        list.add(obj);
-      //      }
-      //    2.
-
-      //      Gson gson = new Gson();
-      //      T[] arr = gson.fromJson(in, clazz);
-      //      for (T obj : arr) {
-      //        list.add(obj);
-      //      }
-
-      //    3.
-
-      //      Gson gson = new Gson();
-      //           T[] arr = gson.fromJson(in, clazz);
-      //              list.addAll(Arrays.asList(arr));
-
-      //    4.
-
-      list.addAll(Arrays.asList(new Gson().fromJson(in, clazz)));
-
-      System.out.printf("'%s' 파일에서 총 %d 개의 게시글 데이터를 로딩했습니다.\n",file.getName(), list.size());
-
-    } catch (Exception e) {
-      System.out.printf("'%s' 파일 읽기 중 오류 발생! - %s\n",file.getName(), e.getMessage());
-      // 파일에서 데이터를 읽다가 오류가 발생하더라도
-      // 시스템을 멈추지 않고 계속 실행하게 한다.
-      // 이것이 예외처리를 하는 이유이다!!!
-    } finally {
-      try {
-        in.close();
-      } catch (Exception e) {
-        // close() 실행하다가 오류가 발생한 경우 무시한다.
-        // 왜? 닫다가 발생한 오류는 특별히 처리할 게 없다.
-      }
     }
   }
 }
