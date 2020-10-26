@@ -1,3 +1,4 @@
+// stateful 방식 - 계산기 서버 만들기
 package com.eomcs.net.ex04.stateful;
 
 import java.io.DataInputStream;
@@ -7,9 +8,10 @@ import java.net.Socket;
 
 public class CalcServer {
   public static void main(String[] args) throws Exception {
-    System.out.println("서버 실행 중 ....");
+    System.out.println("서버 실행 중...");
 
     ServerSocket ss = new ServerSocket(8888);
+
     while (true) {
       Socket socket = ss.accept();
       try {
@@ -19,6 +21,7 @@ public class CalcServer {
         System.out.println("다음 클라이언트의 요청을 처리합니다.");
       }
     }
+    // ss.close();
   }
 
   static void processRequest(Socket socket) throws Exception {
@@ -26,32 +29,34 @@ public class CalcServer {
         DataInputStream in = new DataInputStream(socket.getInputStream());
         PrintStream out = new PrintStream(socket.getOutputStream());) {
 
-      int result = 0;
-
-      loop : while (true) {
-        String op = in.readUTF();
+      loop: while (true) {
         int a = in.readInt();
+        String op = in.readUTF();
+        int b = in.readInt();
+        int result = 0;
 
         switch (op) {
           case "+":
-            result += a;
+            result = a + b;
             break;
           case "-":
-            result -= a;
+            result = a - b;
             break;
           case "*":
-            result *= a;
+            result = a * b;
             break;
           case "/":
-            result /= a;
+            result = a / b;
             break;
           case "quit":
             break loop;
         }
 
-        out.printf("계산결과 : %d\n", result);
+        out.printf("%d %s %d = %d\n", a, op, b, result);
       }
-      out.println("Goodbye!");
+    out.println("Goodbye!");
     }
   }
 }
+
+

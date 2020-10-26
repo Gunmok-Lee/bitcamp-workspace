@@ -1,4 +1,4 @@
-package com.eomcs.net.ex11;
+package com.eomcs.net.ex11.step13;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -33,7 +33,7 @@ public class RequestProcessor extends Thread {
         }
       }
 
-      sendHttpResponse(out, compute(requestLine));
+      sendHttpResponse(out, compute(requestLine)); 
 
     } catch (Exception e) {
       System.out.printf("클라이언트 요청 처리 중 오류 발생! - %s\n", e.getMessage());
