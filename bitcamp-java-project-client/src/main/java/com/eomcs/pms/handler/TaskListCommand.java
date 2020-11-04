@@ -1,35 +1,52 @@
 package com.eomcs.pms.handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.List;
+import com.eomcs.pms.dao.MemberDao;
+import com.eomcs.pms.dao.ProjectDao;
+import com.eomcs.pms.dao.TaskDao;
+import com.eomcs.pms.domain.Task;
 
 public class TaskListCommand implements Command {
+
+  TaskDao taskDao;
+  ProjectDao projectDao;
+  MemberDao memberDao;
+
+  public TaskListCommand(TaskDao taskDao, ProjectDao projectDao, MemberDao memberDao) {
+    this.taskDao = taskDao;
+    this.projectDao = projectDao;
+    this.memberDao = memberDao;
+  }
 
   @Override
   public void execute() {
     System.out.println("[작업 목록]");
 
-    try (Connection con = DriverManager.getConnection( //
-        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-        PreparedStatement stmt = con.prepareStatement( //
-            "select no, content, deadline, owner, status"
-            + " from pms_task "
-            + " order by no desc");
-        ResultSet rs = stmt.executeQuery()) {
+    try {
+      List<Task> list = taskDao.findAll();
+      System.out.println("번호, 작업내용, 마감일, 작업자, 상태");
 
-      while (rs.next()) {
-        System.out.printf("%d, %s, %s, %s, %d\n", //
-            rs.getInt("no"), //
-            rs.getString("content"), //
-            rs.getDate("deadline"), //
-            rs.getString("owner"), //
-            rs.getInt("status"));
-
+      for (Task task : list) {
+        String stateLabel = null;
+        switch (task.getStatus()) {
+          case 1:
+            stateLabel = "진행중";
+            break;
+          case 2:
+            stateLabel = "완료";
+            break;
+          default:
+            stateLabel = "신규";
+        }
+        System.out.printf("%d, %s, %s, %s, %s\n",
+            task.getNo(),
+            task.getContent(),
+            task.getDeadline(),
+            task.getOwner().getName(),
+            stateLabel);
       }
-    }catch (Exception e) {
-      System.out.println("데이터 목록 조회 중 오류 발생!");
+    } catch (Exception e) {
+      System.out.println("작업 목록 조회 중 오류 발생!");
       e.printStackTrace();
     }
   }
