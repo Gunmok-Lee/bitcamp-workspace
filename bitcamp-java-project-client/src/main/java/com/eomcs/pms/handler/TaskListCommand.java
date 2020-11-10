@@ -1,25 +1,19 @@
 package com.eomcs.pms.handler;
 
 import java.util.List;
-import com.eomcs.pms.dao.MemberDao;
-import com.eomcs.pms.dao.ProjectDao;
+import java.util.Map;
 import com.eomcs.pms.dao.TaskDao;
 import com.eomcs.pms.domain.Task;
 
 public class TaskListCommand implements Command {
-
   TaskDao taskDao;
-  ProjectDao projectDao;
-  MemberDao memberDao;
 
-  public TaskListCommand(TaskDao taskDao, ProjectDao projectDao, MemberDao memberDao) {
+  public TaskListCommand(TaskDao taskDao) {
     this.taskDao = taskDao;
-    this.projectDao = projectDao;
-    this.memberDao = memberDao;
   }
 
   @Override
-  public void execute() {
+  public void execute(Map<String,Object> context) {
     System.out.println("[작업 목록]");
 
     try {

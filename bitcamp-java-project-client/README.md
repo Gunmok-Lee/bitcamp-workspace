@@ -1,202 +1,81 @@
-# 37-a. 데이터 관리를 DBMS에게 맡기기 : JDBC API 사용하기
+# 41-a. 41-a. DB 프로그래밍 더 쉽고 간단히 하는 방법 : Mybatis 퍼시스턴스 프레임워크 도입
 
 이번 훈련에서는,
-- **DBMS** 와 **JDBC API** 를 이용하여 데이터를 저장하고 조회하는 것을 배운다.
+- 실무에서 자주 쓰이는 *퍼시스턴스 프레임워크* 중에 하나인 **마이바티스** 프레임워크의 사용법을 배울 것이다.
 
-**데이터베이스(Database)** 는,
-- 상호 연관이 있는 데이터의 모임을 가리킨다.
-- 여러 사람이 공유하고 사용할 목적으로 통합 관리되는 정보의 집합이다.(wikipedia.org)
-- 논리적으로 연관된 데이터를 검색과 갱신이 쉽도록 고도로 구조화한 것이다.
-- 목적(wikipedia.og)
-  - 데이터 중복 최소화
-  - 데이터 공유
-  - 일관성, 무결성, 보안성 유지
-  - 데이터 접근 용이성
-  - 데이터 저장 공간 절약
+**퍼시스턴스 프레임워크(Persistence Framework)** 는,
+- 데이터의 저장, 조회, 변경, 삭제를 다루는 클래스 및 설정 파일들의 집합이다.(위키백과)
+- JDBC 프로그래밍의 번거로움 없이 간결하게 데이터베이스와 연동할 수 있다.
+- 소스 코드에서 SQL 문을 분리하여 관리한다.
 
-**데이터베이스 관리 시스템(Database Management System: DBMS)** 은,
-- 데이터베이스의 목적을 달성할 수 있도록 편리하고 효율적인 환경을 제공하는 소프트웨어다.
-
-**JDBC(Java Database Connectivity) API** 는,
-- 자바 애플리케이션이 DBMS에 연동할 때 사용할 클래스와 호출 규칙을 정의한 라이브러리다
-- DBMS 제작자는 *JDBC API* 의 구현체를 제공한다.
-
-**JDBC 드라이버** 는,
-- *JDBC API* 규약에 따라 만든 클래스 라이브러리다.
-- 각각의 DBMS 제작자가 배포한다.
-
-**JDBC 드라이버** 의 종류,
-- Type 1
-  - *JDBC-ODBC 브릿지 드라이버(bridge driver)* 라 부른다.
-  - *ODBC API* 를 사용하여 DBMS와 연동한다.
-  - *ODBC API* 를 제공하는 엑셀이나 액세스 등의 파일 DB에 접근할 때 용이하다.
-  - 따라서 이 드라이버를 사용하는 컴퓨터에 ODBC 드라이버가 설치되어 있어야 한다.
-  - 여러 계층을 경유하기 때문에 실행 속도가 느리다.
-  - **JRE(Java Runtime Environment)** 에 기본으로 포함되어 있다.
-- Type 2
-  - *네이티브 드라이버(native driver)* 라 부른다.
-  - DBMS 제작자가 제공하는 *데이터베이스 API(C/C++) = Vendor API = Native API* 를 호출하여 DBMS와 연동한다.
-  - 따라서 이 드라이버를 사용하는 컴퓨터에 *데이터베이스 API* 가 설치되어 있어야 한다.
-  - DBMS 제작자가 별도의 써드 파티 업체에서 제공한다.
-- Type 3
-  - *네트워크 프로토콜 드라이버(network protocol driver)* 라 부른다.
-  - *미들웨어* 를 경유하여 DBMS와 연동한다.
-  - 따라서 특정 DBMS에 종속되지 않으며, 하나의 드라이버로 여러 DBMS에 접근할 수 있다.
-  - C/C++ 함수를 호출하지 않고 *미들웨어 전용 프로토콜* 로 직접 통신하기 때문에 100% 순수 자바 코드로 구현되었다.
-  - *미들웨어* 구입 비용이 추가로 든다.
-- Type 4
-  - *씬 드라이버(thin driver)* 라 부른다.
-  - DBMS와 연동할 때 *DBMS 전용 프로토콜* 로 직접 통신한다.
-  - DBMS와 직접 통신하기 때문에 실행 속도가 빠르다.
-  - 내부적으로 C/C++ 함수를 호출하지 않기 때문에 100% 순수 자바 코드로 구현되었다.
-  - 단, 특정 DBMS에 종속된다.
-  - DBMS 제작자에서 제공한다.
+**마이바티스(Mybatis)** 는,
+- *퍼시스턴스 프레임워크* 중의 하나이다.
+- JDBC 프로그래밍을 캡슐화하여 데이터베이스 연동을 쉽게 하도록 도와준다.
+- 자바 소스 파일에서 SQL을 분리하여 별도의 파일로 관리하기 때문에
+  자바 소스 코드를 간결하게 유지할 수 있다.
+- JDBC 프로그래밍 할 때와 마찬가지로 직접 SQL을 다루기 때문에
+  레거시(legacy) 시스템에서 사용하는 데이터베이스와 연동할 때 유리하다.
+- SQL을 통해 데이터베이스와 연동한다고 해서 보통 **SQL 매퍼(mapper)** 라 부른다.
 
 ## 훈련 목표
-- **JDBC API** 를 사용하여 **DBMS** 를 사용하는 방법을 배운다.
-- **JDBC API** 와 **JDBC 드라이버** 의 관계를 이해한다.
-- *JVM* 이 java.sql.Driver 구현체를 로딩하고 구동시키는 원리를 이해한다.
-- 프로젝트에 **JDBC 드라이버** 를 추가하는 방법을 배운다.
+- **Mybatis SQL 맵퍼** 의 특징과 동작 원리를 이해한다.
+- Mybatis 퍼시스턴스 프레임워크를 설정하고 다루는 방법을 배운다.
 
 ## 훈련 내용
-- 데이터를 파일에서 읽고 파일로 쓰는 기존 코드를 JDBC API를 사용하는 코드를 변경한다.
-
+-
 
 ## 실습
 
-### 1단계 - 프로젝트에 JDBC 드라이버를 설정한다.
+### 1단계 - 프로젝트에 MyBatis 라이브러리를 추가한다.
 
-- build.gradle 변경
-  - mvnrepository.com 또는 search.maven.org에서 mariadb jdbc driver를 검색한다.
-  - 라이브러리 정보를 build.gradle 파일에 설정한다.
-  - gradle을 이용하여 eclipse 설정 파일을 갱신한다.
-    - `$ gradle eclipse`
-    - 다운로드 받지 않은 라이브러리가 있다면 자동으로 서버에서 받을 것이다.
-    - 라이브러리 정보가 변경되었다면 해당 라이브러리를 서버에서 받을 것이다.
-  - 이클립스 프로젝트를 리프래시 한다.
-    - 프로젝트에 mariadb jdbc driver 라이브러리가 추가되었는지 확인한다.
+- build.gradle   
+  - `search.maven.org` 사이트에서 *mybatis* 라이브러리 정보를 찾는다.
+  - 의존 라이브러리 블록에서 `mybatis` 라이브러리를 등록한다.
+- gradle을 이용하여 eclipse 설정 파일을 갱신한다.
+  - `$ gradle eclipse`
+- 이클립스에서 프로젝트를 갱신한다.
 
-### 2단계 - DBMS에 게시글을 저장할 테이블을 생성한다.
+### 2단계 - `MyBatis` 설정 파일을 준비한다.
 
-```
-create table pms_board(
-  no int not null,
-  title varchar(255) not null,
-  content text not null,
-  writer varchar(30) not null,
-  cdt datetime default now(),
-  vw_cnt int default 0
-);
+- src/main/resources/com/eomcs/pms/conf/jdbc.properties
+  - 마이바티스 홈 : <http://www.mybatis.org>
+  - `MyBatis` 설정 파일에서 참고할 DBMS 접속 정보를 등록한다.
+- src/main/resources/com/eomcs/pms/conf/mybatis-config.xml
+  - `MyBatis` 설정 파일이다.
+  - DBMS 서버의 접속 정보를 갖고 있는 jdbc.properties 파일의 경로를 등록한다.
+  - DBMS 서버 정보를 설정한다.
+  - DB 커넥션 풀을 설정한다.
 
-alter table pms_board
-  add constraint pms_board_pk primary key(no);
 
-alter table pms_board
-  modify column no int not null auto_increment;
+### 3단계: BoardDaoImpl 에 Mybatis를 적용한다.
 
-```
+- com.eomcs.pms.dao.mariadb.BoardDaoImpl 클래스 변경
+  - SQL을 뜯어내어 BoardMapper.xml로 옮긴다.
+  - JDBC 코드를 뜯어내고 그 자리에 Mybatis 클래스로 대체한다.
+  - 백업: BoardDaoImpl01.java
+- com/eomcs/pms/mapper/BoardMapper.xml 추가
+  - BoardDaoImpl 에 있던 SQL문을 이 파일로 옮긴다.
+- com/eomcs/pms/conf/mybatis-config.xml 변경
+  - BoardMapper 파일의 경로를 등록한다.
 
-### 3단계 - DBMS를 이용하여 게시글을 저장하고 로딩한다.
+### 4단계: App 에서 사용하는 객체를 AppInitListener 에서 모두 준비한다.
 
-- com.eomcs.pms.listener.DataHandlerListener 변경
-  - 게시글 관련 데이터를 파일에서 로딩하고 파일로 저장하는 코드를 제거한다.
-- com.eomcs.pms.handler.BoardAddCommand 변경
-  - 데이터를 저장할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardListCommand 변경
-  - 데이터를 조회할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardDetailCommand 변경
-  - 데이터를 조회할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardUpdateCommand 변경
-  - 데이터를 변경할 때 JDBC API를 사용한다.
-- com.eomcs.pms.handler.BoardDeleteCommand 변경
-  - 데이터를 삭제할 때 JDBC API를 사용한다.
-- com.eomcs.pms.App 변경
-  - BoardXxxCommand 변경에 맞춰 소스 코드를 정리한다.
-
-### 4단계 - DBMS에 회원 정보를 저장할 테이블을 만들고, 이 테이블을 사용하여 회원 정보를 관리한다.
-
-```
-create table pms_member(
-  no int not null,
-  name varchar(30) not null,
-  email varchar(50) not null,
-  password varchar(50) not null,
-  photo varchar(255),
-  tel varchar(20),
-  cdt datetime default now()
-);
-
-alter table pms_member
-  add constraint pms_member_pk primary key(no);
-
-alter table pms_member
-  modify column no int not null auto_increment;
-```
-
-- com.eomcs.pms.listener.DataHandlerListener 변경
-  - 회원 관련 데이터를 파일에서 로딩하고 파일로 저장하는 코드를 제거한다.
-- com.eomcs.pms.handler.MemberXxxCommand 변경
-  - 데이터를 저장하고 조회, 변경, 삭제할 때 JDBC API를 사용한다.
-- com.eomcs.pms.App 변경
-  - MemberXxxCommand 변경에 맞춰 소스 코드를 정리한다.
-
-### 5단계 - DBMS에 프로젝트 정보를 저장할 테이블을 만들고, 이 테이블을 사용하여 프로젝트 정보를 관리한다.
-
-```
-create table pms_project(
-  no int not null,
-  title varchar(255) not null,
-  content text not null,
-  sdt date not null,
-  edt date not null,
-  owner varchar(30) not null,
-  members varchar(255) not null
-);
-
-alter table pms_project
-  add constraint pms_project_pk primary key(no);
-
-alter table pms_project
-  modify column no int not null auto_increment;
-```
-
-- com.eomcs.pms.listener.DataHandlerListener 변경
-  - 프로젝트 관련 데이터를 파일에서 로딩하고 파일로 저장하는 코드를 제거한다.
-- com.eomcs.pms.handler.ProjectXxxCommand 변경
-  - 데이터를 저장하고 조회, 변경, 삭제할 때 JDBC API를 사용한다.
-- com.eomcs.pms.App 변경
-  - ProjectXxxCommand 변경에 맞춰 소스 코드를 정리한다.
-
-### 6단계 - DBMS에 작업 정보를 저장할 테이블을 만들고, 이 테이블을 사용하여 작업 정보를 관리한다.
-
-```
-create table pms_task(
-  no int not null,
-  content text not null,
-  deadline date not null,
-  owner varchar(30) not null,
-  status int default 0
-);
-
-alter table pms_task
-  add constraint pms_task_pk primary key(no);
-
-alter table pms_task
-  modify column no int not null auto_increment;
-```
-
-- com.eomcs.pms.listener.DataHandlerListener 삭제
-  - 이제 더이상 파일 입출력 기능이 필요 없다.
-- com.eomcs.pms.handler.TaskXxxCommand 변경
-  - 데이터를 저장하고 조회, 변경, 삭제할 때 JDBC API를 사용한다.
-- com.eomcs.pms.App 변경
-  - TaskXxxCommand 변경에 맞춰 소스 코드를 정리한다.
+- com.eomcs.pms.dao.mariadb.BoardDaoImpl 클래스 변경
+  - 각 메서드에서 SqlSessionFactory를 준비하는 대신에 생성자의 파라미터로 주입 받는다.
+- com.eomcs.pms.listener.AppInitListener 클래스 변경
+  - `SqlSessionFactory` 객체를 생성한다.
+  - `XxxDao` 구현체 생성 코드도 이 클래스로 옮긴다.
+  - `Command` 구현체 생성 코드도 이 클래스로 옮긴다.
+- com.eomcs.pms.App 클래스 변경
+  - DAO 구현체 생성 코드와 Command 구현체 생성 코드를 제거한다.
+  - commandMap 객체 생성 코드도 제거한다.
 
 
 ## 실습 결과
-- src/main/java/com/eomcs/pms/listener/DataHandlerListener.java 삭제
-- src/main/java/com/eomcs/pms/handler/BoardXxxCommand.java 변경
-- src/main/java/com/eomcs/pms/handler/MemberXxxCommand.java 변경
-- src/main/java/com/eomcs/pms/handler/ProjectXxxCommand.java 변경
-- src/main/java/com/eomcs/pms/handler/TaskXxxCommand.java 변경
+- build.gradle 변경
+- src/main/resources/com/eomcs/pms/conf/jdbc.properties 생성
+-
+- src/main/java/com/eomcs/pms/filter/CommandFilter.java 변경
+- src/main/java/com/eomcs/pms/filter/LogCommandFilter.java 변경
+- src/main/java/com/eomcs/pms/filter/CommandFilterManager.java 변경
 - src/main/java/com/eomcs/pms/App.java 변경
