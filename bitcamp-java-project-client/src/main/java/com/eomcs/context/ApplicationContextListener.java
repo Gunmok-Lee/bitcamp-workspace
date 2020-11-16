@@ -15,8 +15,8 @@ public interface ApplicationContextListener {
   // - 왜 이런 방식을 사용하는가?
   // - 파라미터 방식은 메서드에게 작업에 필요한 정보를 전달할 수 있기 때문이다.
   // - Map을 사용하여 파라미터로 전달하는 방식은 데이터의 In/Out이 가능하다.
-  void contextInitialized(Map<String,Object> context);
+  void contextInitialized(Map<String, Object> context);
 
   // 발행자(애플리케이션)가 애플리케이션 종료를 알리기 위해 호출하는 메서드
-  void contextDestroyed(Map<String,Object> context);
+  void contextDestroyed(Map<String, Object> context);
 }

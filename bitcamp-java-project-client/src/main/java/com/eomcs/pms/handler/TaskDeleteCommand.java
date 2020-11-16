@@ -12,10 +12,10 @@ public class TaskDeleteCommand implements Command {
   }
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     System.out.println("[작업 삭제]");
 
-    try  {
+    try {
       int no = Prompt.inputInt("번호? ");
 
       String response = Prompt.inputString("정말 삭제하시겠습니까?(y/N) ");

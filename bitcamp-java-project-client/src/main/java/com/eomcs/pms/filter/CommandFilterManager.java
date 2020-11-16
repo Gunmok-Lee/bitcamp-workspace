@@ -25,7 +25,7 @@ public class CommandFilterManager {
   }
 
   // 각각의 필터에게 준비하라고 요청한다.
-  public void init(Map<String,Object> context) throws Exception {
+  public void init(Map<String, Object> context) throws Exception {
     Chain chain = firstChain;
     while (chain != null) {
       chain.filter.init(context);
@@ -33,7 +33,7 @@ public class CommandFilterManager {
     }
   }
 
-  //각각의 필터에게 마무리하라고 요청한다.
+  // 각각의 필터에게 마무리하라고 요청한다.
   public void destroy() {
     Chain chain = firstChain;
     while (chain != null) {

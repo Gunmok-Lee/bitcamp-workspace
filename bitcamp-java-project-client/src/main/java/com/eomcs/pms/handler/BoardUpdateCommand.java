@@ -14,7 +14,7 @@ public class BoardUpdateCommand implements Command {
   }
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     System.out.println("[게시물 변경]");
     int no = Prompt.inputInt("번호? ");
 
@@ -25,10 +25,8 @@ public class BoardUpdateCommand implements Command {
         return;
       }
 
-      board.setTitle(Prompt.inputString(String.format(
-          "제목(%s)? ", board.getTitle())));
-      board.setContent(Prompt.inputString(String.format(
-          "내용(%s)? ", board.getContent())));
+      board.setTitle(Prompt.inputString(String.format("제목(%s)? ", board.getTitle())));
+      board.setContent(Prompt.inputString(String.format("내용(%s)? ", board.getContent())));
 
       String response = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
       if (!response.equalsIgnoreCase("y")) {

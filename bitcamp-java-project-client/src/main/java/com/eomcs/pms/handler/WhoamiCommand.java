@@ -6,7 +6,7 @@ import com.eomcs.pms.domain.Member;
 public class WhoamiCommand implements Command {
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     Member member = (Member) context.get("loginUser");
     if (member == null) {
       System.out.println("로그인 하지 않았습니다!");

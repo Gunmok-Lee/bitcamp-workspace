@@ -13,7 +13,7 @@ public class MemberUpdateCommand implements Command {
   }
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     System.out.println("[회원 변경]");
     int no = Prompt.inputInt("번호? ");
 
@@ -24,15 +24,11 @@ public class MemberUpdateCommand implements Command {
         return;
       }
 
-      member.setName(Prompt.inputString(String.format(
-          "이름(%s)? ", member.getName())));
-      member.setEmail(Prompt.inputString(String.format(
-          "이메일(%s)? ", member.getEmail())));
+      member.setName(Prompt.inputString(String.format("이름(%s)? ", member.getName())));
+      member.setEmail(Prompt.inputString(String.format("이메일(%s)? ", member.getEmail())));
       member.setPassword(Prompt.inputString("암호? "));
-      member.setPhoto(Prompt.inputString(String.format(
-          "사진(%s)? ", member.getPhoto())));
-      member.setTel(Prompt.inputString(String.format(
-          "전화(%s)? ", member.getTel())));
+      member.setPhoto(Prompt.inputString(String.format("사진(%s)? ", member.getPhoto())));
+      member.setTel(Prompt.inputString(String.format("전화(%s)? ", member.getTel())));
 
       String response = Prompt.inputString("정말 변경하시겠습니까?(y/N) ");
       if (!response.equalsIgnoreCase("y")) {

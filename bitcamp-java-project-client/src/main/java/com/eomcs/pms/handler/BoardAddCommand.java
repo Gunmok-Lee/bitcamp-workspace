@@ -18,7 +18,7 @@ public class BoardAddCommand implements Command {
   }
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     System.out.println("[게시물 등록]");
 
     try {

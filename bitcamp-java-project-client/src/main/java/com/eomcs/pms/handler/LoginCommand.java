@@ -14,7 +14,7 @@ public class LoginCommand implements Command {
   }
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     System.out.println("[로그인]");
 
     if (context.get("loginUser") != null) {

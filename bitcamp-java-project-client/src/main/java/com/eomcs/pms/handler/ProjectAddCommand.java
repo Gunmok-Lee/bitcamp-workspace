@@ -20,7 +20,7 @@ public class ProjectAddCommand implements Command {
   }
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     System.out.println("[프로젝트 등록]");
 
     try {

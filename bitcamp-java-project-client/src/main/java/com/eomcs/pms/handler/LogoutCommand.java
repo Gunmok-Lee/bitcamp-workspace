@@ -6,7 +6,7 @@ import com.eomcs.pms.domain.Member;
 public class LogoutCommand implements Command {
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     Member loginUser = (Member) context.get("loginUser");
     if (loginUser == null) {
       System.out.println("로그인 된 상태가 아닙니다!");

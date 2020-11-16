@@ -17,7 +17,7 @@ public class LogCommandFilter implements CommandFilter {
 
   @Override
   public void doFilter(Request request, FilterChain next) throws Exception {
-    //System.out.println("로그 남겼다!");
+    // System.out.println("로그 남겼다!");
     logOut.println(request.getCommandPath());
     logOut.flush();
 

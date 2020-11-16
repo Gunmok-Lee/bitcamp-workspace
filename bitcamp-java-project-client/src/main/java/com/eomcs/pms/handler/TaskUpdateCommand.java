@@ -24,7 +24,7 @@ public class TaskUpdateCommand implements Command {
   }
 
   @Override
-  public void execute(Map<String,Object> context) {
+  public void execute(Map<String, Object> context) {
     System.out.println("[작업 변경]");
 
     try {
@@ -65,10 +65,8 @@ public class TaskUpdateCommand implements Command {
       }
 
       // 작업 정보 변경
-      task.setContent(Prompt.inputString(String.format(
-          "내용(%s)? ", task.getContent())));
-      task.setDeadline(Prompt.inputDate(String.format(
-          "마감일(%s)? ", task.getDeadline())));
+      task.setContent(Prompt.inputString(String.format("내용(%s)? ", task.getContent())));
+      task.setDeadline(Prompt.inputDate(String.format("마감일(%s)? ", task.getDeadline())));
 
       String stateLabel = null;
       switch (task.getStatus()) {
@@ -81,8 +79,8 @@ public class TaskUpdateCommand implements Command {
         default:
           stateLabel = "신규";
       }
-      task.setStatus(Prompt.inputInt(String.format(
-          "상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", stateLabel)));
+      task.setStatus(
+          Prompt.inputInt(String.format("상태(%s)?\n0: 신규\n1: 진행중\n2: 완료\n> ", stateLabel)));
 
       // 프로젝트의 멤버 중에서 작업을 수행할 담당자를 결정한다.
       List<Member> members = memberDao.findByProjectNo(task.getProjectNo());
