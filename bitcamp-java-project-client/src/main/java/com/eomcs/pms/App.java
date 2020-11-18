@@ -22,7 +22,7 @@ import com.eomcs.util.Prompt;
 public class App {
 
   // 옵저버와 공유할 맵 객체
-  Map<String, Object> context = new Hashtable<>();
+  Map<String,Object> context = new Hashtable<>();
 
   // 옵저버를 보관할 컬렉션 객체
   List<ApplicationContextListener> listeners = new ArrayList<>();
@@ -59,6 +59,7 @@ public class App {
     }
   }
 
+
   public static void main(String[] args) throws Exception {
     App app = new App();
 
@@ -77,7 +78,7 @@ public class App {
 
     // 필터를 등록한다.
     filterManager.add(new LogCommandFilter());
-    // filterManager.add(new AuthCommandFilter());
+    //filterManager.add(new AuthCommandFilter());
     filterManager.add(new DefaultCommandFilter());
 
     // 필터가 사용할 값을 context 맵에 담는다.
@@ -93,38 +94,35 @@ public class App {
     Deque<String> commandStack = new ArrayDeque<>();
     Queue<String> commandQueue = new LinkedList<>();
 
-    loop: while (true) {
-      String inputStr = Prompt.inputString("명령> ");
+    loop:
+      while (true) {
+        String inputStr = Prompt.inputString("명령> ");
 
-      if (inputStr.length() == 0) {
-        continue;
+        if (inputStr.length() == 0) {
+          continue;
+        }
+
+        commandStack.push(inputStr);
+        commandQueue.offer(inputStr);
+
+        switch (inputStr) {
+          case "history": printCommandHistory(commandStack.iterator()); break;
+          case "history2": printCommandHistory(commandQueue.iterator()); break;
+          case "quit":
+          case "exit":
+            System.out.println("안녕!");
+            break loop;
+          default:
+            // 커맨드나 필터가 사용할 객체를 준비한다.
+            Request request = new Request(inputStr, context);
+
+            // 필터들의 체인을 실행한다.
+            if (filterChain != null) {
+              filterChain.doFilter(request);
+            }
+        }
+        System.out.println();
       }
-
-      commandStack.push(inputStr);
-      commandQueue.offer(inputStr);
-
-      switch (inputStr) {
-        case "history":
-          printCommandHistory(commandStack.iterator());
-          break;
-        case "history2":
-          printCommandHistory(commandQueue.iterator());
-          break;
-        case "quit":
-        case "exit":
-          System.out.println("안녕!");
-          break loop;
-        default:
-          // 커맨드나 필터가 사용할 객체를 준비한다.
-          Request request = new Request(inputStr, context);
-
-          // 필터들의 체인을 실행한다.
-          if (filterChain != null) {
-            filterChain.doFilter(request);
-          }
-      }
-      System.out.println();
-    }
     Prompt.close();
 
     // 필터들을 마무리시킨다.

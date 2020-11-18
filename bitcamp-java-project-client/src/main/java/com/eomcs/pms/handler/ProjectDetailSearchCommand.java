@@ -1,41 +1,61 @@
 package com.eomcs.pms.handler;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
+import com.eomcs.pms.service.ProjectService;
 import com.eomcs.util.Prompt;
 
 public class ProjectDetailSearchCommand implements Command {
-  ProjectDao projectDao;
 
-  public ProjectDetailSearchCommand(ProjectDao projectDao) {
-    this.projectDao = projectDao;
+  ProjectService projectService;
+
+  public ProjectDetailSearchCommand(ProjectService projectService) {
+    this.projectService = projectService;
   }
 
   @Override
-  public void execute(Map<String, Object> context) {
-    System.out.println("[프로젝트 검색]");
+  public void execute(Map<String,Object> context) {
+    System.out.println("[프로젝트 상세 검색]");
 
     try {
-      String item = Prompt.inputString("항목(1:프로젝트명, 2:관리자명, 3:팀원, 그 외: 전체)? ");
-      String keyword = Prompt.inputString("검색어? ");
+      HashMap<String,Object> keywords = new HashMap<>();
 
-      List<Project> list = projectDao.findByKeyword(item, keyword);
+      String title = Prompt.inputString("프로젝트명? ");
+      if (title.length() > 0) {
+        keywords.put("title", title);
+      }
+
+      String owner = Prompt.inputString("관리자명? ");
+      if (owner.length() > 0) {
+        keywords.put("owner", owner);
+      }
+
+      String member = Prompt.inputString("팀원명? ");
+      if (member.length() > 0) {
+        keywords.put("member", member);
+      }
+
+      List<Project> list = projectService.list(keywords);
       System.out.println("번호, 프로젝트명, 시작일 ~ 종료일, 관리자, 팀원");
 
       for (Project project : list) {
         StringBuilder members = new StringBuilder();
-        for (Member member : project.getMembers()) {
+        for (Member m : project.getMembers()) {
           if (members.length() > 0) {
             members.append(",");
           }
-          members.append(member.getName());
+          members.append(m.getName());
         }
 
-        System.out.printf("%d, %s, %s ~ %s, %s, [%s]\n", project.getNo(), project.getTitle(),
-            project.getStartDate(), project.getEndDate(), project.getOwner().getName(),
+        System.out.printf("%d, %s, %s ~ %s, %s, [%s]\n",
+            project.getNo(),
+            project.getTitle(),
+            project.getStartDate(),
+            project.getEndDate(),
+            project.getOwner().getName(),
             members.toString());
       }
     } catch (Exception e) {

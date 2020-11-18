@@ -10,7 +10,7 @@ public interface MemberDao {
 
   Member findByNo(int no) throws Exception;
 
-  Member findByName(String name) throws Exception;
+  List<Member> findByName(String name) throws Exception;
 
   List<Member> findAll() throws Exception;
 
