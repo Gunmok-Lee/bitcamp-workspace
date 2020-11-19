@@ -71,7 +71,7 @@ public class ServerApp {
         if (stop) {
           break;
         }
-        // 람다 문법 사용
+        // 직접 스레드를 생성하는 것이 아니라 스레드풀에 작업을 맡긴다.
         threadPool.execute(() -> handleClient(clientSocket));
       }
 
@@ -81,6 +81,7 @@ public class ServerApp {
 
     notifyApplicationContextListenerOnServiceStopped();
 
+    // 스레드풀을 종료한다.
     threadPool.shutdown();
 
     try {
@@ -100,7 +101,10 @@ public class ServerApp {
           System.out.println("모든 작업을 강제 종료했다.");
         }
       }
-    } catch (Exception e) {} // 스레드풀 종료 중 발생하는 예외는 무시한다.
+    } catch (Exception e) {
+      System.out.println("스레드풀 종료 중 오류 발생!");
+    }
+    System.out.println("서버 종료!");
   }
 
   public static void main(String[] args) {
@@ -123,29 +127,27 @@ public class ServerApp {
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter out = new PrintWriter(socket.getOutputStream())) {
 
-      while (true) {
-        String request = in.readLine();
+      // 클라이언트가 보낸 요청을 읽는다.
+      String request = in.readLine();
 
-        if (request.equalsIgnoreCase("stop")) {
-          stop = true; // 서버의 상태를 멈추라는 의미로 true로 설정한다.
-          out.println("서버를 종료하는 중입니다!");
-          out.println();
-          out.flush();
-          break;
-        }
-
-        Command command = (Command) context.get(request);
-        if (command != null) {
-          command.execute(out, in);
-        } else {
-          out.println("해당 명령을 처리할 수 없습니다!");
-        }
-
-        // 응답의 끝을 알리는 빈 문자열을 보낸다.
+      if (request.equalsIgnoreCase("stop")) {
+        stop = true; // 서버의 상태를 멈추라는 의미로 true로 설정한다.
+        out.println("서버를 종료하는 중입니다!");
         out.println();
         out.flush();
-
+        return;
       }
+
+      Command command = (Command) context.get(request);
+      if (command != null) {
+        command.execute(out, in);
+      } else {
+        out.println("해당 명령을 처리할 수 없습니다!");
+      }
+
+      // 응답의 끝을 알리는 빈 문자열을 보낸다.
+      out.println();
+      out.flush();
 
     } catch (Exception e) {
       System.out.println("클라이언트와의 통신 오류!");
