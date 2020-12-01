@@ -9,6 +9,11 @@ repositories {
 }
 
 dependencies {
+    // 셀레니움 드라이버
+    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+
+
 // jsoup HTML parser library @ https://jsoup.org/
     implementation 'org.jsoup:jsoup:1.13.1'
     // Mybatis 퍼시스턴스 프레임워크

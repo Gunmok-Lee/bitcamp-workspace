@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>아카이뷰 로그인 페이지</title>
+<style>
+
+ #logo {
+width: 500px;
+height: 200px;
+display: block;
+margin-left: auto;
+margin-right: auto;
+}
+
+body{
+background-color: #000000;
+}
+
+ #welcome{
+ position: absolute;
+width: 654px;
+height: 236px;
+display: block;
+left: 327px;
+top: 115px;
+
+font-family: Roboto;
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 42px;
+align-items: center;
+text-align: center;
+
+color: #ffffff;
+ }
+ 
+ #form1{
+ position: absolute;
+width: 399px;
+height: 406px;
+display: block;
+left: 450px;
+top: 500px;
+align-items: center;
+text-align: center;
+ }
+
+#loginID{
+position: absolute;
+width: 358px;
+height: 67px;
+
+background: #1F2128;
+border-radius: 5px;
+}
+
+#loginPW{
+position: absolute;
+width: 358px;
+height: 67px;
+
+background: #1F2128;
+border-radius: 5px;
+}
+
+#loginBT{
+position: absolute;
+width: 358px;
+height: 67px;
+
+background: #F21B9C;
+border-radius: 5px;
+}
+
+p{
+font-size : 6px;
+color: #ffffff;
+}
+
+span{
+font-size : 6px;
+color: #ffffff;
+}
+
+</style>
+</head>
+<body>
+<img id="logo" src="Archiview_logo.png" alt="Archiview" width="300" />
+  <h3 id="welcome">당신의 감성을 담은<br>영화 후기를 만들어보세요.</h3>
+  <form id="form1">
+    <input id="loginID" type="email" name="이메일 주소" /><br />
+    <input id="loginPW" type="password" name="비밀번호" /><br />
+    <input id="loginBT" type="submit" name="로그인"><br />
+  <hr />
+  <p id="forgetPW">비밀번호를 잊으셨나요?</p>
+  <hr />
+  <span id="nonID">계정이 없으신가요?</span>
+  <span id="joinID">지금 가입하세요</span>
+  </form>
+</body>
+</html>
