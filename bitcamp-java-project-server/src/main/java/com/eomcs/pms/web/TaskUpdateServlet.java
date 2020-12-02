@@ -23,8 +23,7 @@ public class TaskUpdateServlet extends HttpServlet {
       throws ServletException, IOException {
 
     ServletContext ctx = request.getServletContext();
-    TaskService taskService =
-        (TaskService) ctx.getAttribute("taskService");
+    TaskService taskService = (TaskService) ctx.getAttribute("taskService");
 
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
@@ -43,14 +42,15 @@ public class TaskUpdateServlet extends HttpServlet {
       task.setContent(request.getParameter("content"));
       task.setDeadline(Date.valueOf(request.getParameter("deadline")));
       task.setStatus(Integer.parseInt(request.getParameter("status")));
-      task.setOwner(new Member().setNo(Integer.parseInt(request.getParameter("owner"))));
+      task.setOwner(new Member()
+          .setNo(Integer.parseInt(request.getParameter("owner"))));
 
       if (taskService.update(task) == 0) {
         out.println("<p>해당 작업이 존재하지 않습니다.</p>");
       } else {
-
-        out.println("<o>작업을 변경하였습니다.</p>");
+        out.println("<p>작업을 변경하였습니다.</p>");
       }
+
       response.setHeader("Refresh",
           "1;url=../project/detail?no=" + request.getParameter("projectNo"));
 

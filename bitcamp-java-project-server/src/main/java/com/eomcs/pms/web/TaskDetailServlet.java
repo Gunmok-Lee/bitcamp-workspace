@@ -71,18 +71,21 @@ public class TaskDetailServlet extends HttpServlet {
         }
         out.println("</select><br>");
 
-        String[] stateLables = {"준비", "진행중", "완료"};
+        String[] stateLabels = {"준비", "진행중", "완료"};
         out.println("작업상태: ");
         out.println("<select name='status'>");
         for (int i = 0; i < 3; i++) {
-          out.printf("<option value='%d' %s>%s</option>\n", i,
+          out.printf("<option value='%d' %s>%s</option>\n",
+              i,
               i == task.getStatus() ? "selected" : "",
-                  stateLables[i]);
+                  stateLabels[i]);
         }
         out.println("</select><br>");
         out.println("<button>변경</button>");
-        out.printf("<a href='delete?no=%d&projectNo=%d'>[삭제]</a>\n", task.getNo(),project.getNo());
-        out.printf("<a href='../project/detail?no=%d'>[목록]</a>", project.getNo());
+        out.printf("<a href='delete?no=%d&projectNo=%d'>[삭제]</a>\n",
+            task.getNo(),
+            project.getNo());
+        out.printf("<a href='../project/detail?no=%d'>[목록]</a>\n", project.getNo());
         out.println("</form>");
       }
 
