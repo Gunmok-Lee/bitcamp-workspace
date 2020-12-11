@@ -201,3 +201,12 @@ gradle-app.setting
 **/build/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,linux,macos,windows,gradle,eclipse,java-web,visualstudiocode
+
+# End of https://www.gitignore.io/api/java,linux,macos,gradle,windows,eclipse,java-web,visualstudiocode
+
+*.exe
+node_modules/
+temp/
+Debug/
+Release/
+html-exam/
