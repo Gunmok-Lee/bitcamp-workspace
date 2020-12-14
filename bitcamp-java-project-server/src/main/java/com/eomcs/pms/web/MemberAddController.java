@@ -30,7 +30,7 @@ public class MemberAddController {
     member.setPassword(request.getParameter("password"));
     member.setTel(request.getParameter("tel"));
 
-    Part photoPart = request.getPart("photo");
+    Part photoPart = request.getPart("photoFile");
 
     String filename = UUID.randomUUID().toString();
     String saveFilePath = request.getServletContext().getRealPath("/upload/" + filename);
