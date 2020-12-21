@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+    // id 'application' 일반 자바 애플리케이션이 아니기 때문에 삭제해야한다.
+    id 'eclipse-wtp' // 이클립스 IDE 용 웹 프로젝트 관련 파일을 생성해주는 플러그인
+    id 'war' // 웹 애플리케이션 배포 파일(.war)을 만들어주는 플러그인
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:28.2-jre'
+    testImplementation 'junit:junit:4.12'
+}

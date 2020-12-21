@@ -26,7 +26,7 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/app-context.xml</param-value>
+      <param-value>/WEB-INF/app-sevlet.xml</param-value>
     </init-param>
     <!-- 서블릿을 요청하지 않아도 웹 애플리케이션을 시작시킬 때 자동 생성되어 
          IoC 컨테이너를 준비하는 초기화 작업을 수행할 수 있도록 
